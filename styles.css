@@ -72,12 +72,23 @@ main {
     width: 100px;
     height: 100px;
     background-color: #6200ea;
+    flex-direction: column;
 }
 
 .group {
     width: 70px;
     height: 70px;
     background-color: #ff5722;
+    flex-direction: column;
+}
+
+.node .text,
+.group .text {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    color: #fff;
 }
 
 .node:hover, .group:hover {

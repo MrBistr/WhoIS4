@@ -52,7 +52,12 @@ document.addEventListener('DOMContentLoaded', function () {
         node.classList.add('node');
         node.setAttribute('draggable', true);
 
-        // Add image or text
+        const textContainer = document.createElement('div');
+        textContainer.classList.add('text');
+        textContainer.innerHTML = `<div>${name}</div><div>${job}</div>`;
+        node.appendChild(textContainer);
+
+        // Add image or color
         if (imageInput.files.length > 0) {
             const image = document.createElement('img');
             image.src = URL.createObjectURL(imageInput.files[0]);
@@ -61,13 +66,10 @@ document.addEventListener('DOMContentLoaded', function () {
             image.style.borderRadius = '50%';
             node.appendChild(image);
         } else {
-            node.textContent = `${name}\n${job}`;
             node.style.backgroundColor = randomColor();
         }
 
-        // Position node randomly
-        node.style.top = `${Math.random() * 70 + 10}%`;
-        node.style.left = `${Math.random() * 70 + 10}%`;
+        positionNode(node);
         networkContainer.appendChild(node);
 
         if (mainNode) {
@@ -88,12 +90,37 @@ document.addEventListener('DOMContentLoaded', function () {
         const group = document.createElement('div');
         group.classList.add('group');
         group.textContent = name;
-        group.style.top = `${Math.random() * 70 + 10}%`;
-        group.style.left = `${Math.random() * 70 + 10}%`;
-        group.setAttribute('draggable', true);
+        positionNode(group);
         networkContainer.appendChild(group);
 
         enableDragAndDrop(group);
+    }
+
+    function positionNode(node) {
+        // Ensure no overlap
+        let top, left;
+        do {
+            top = Math.random() * 70 + 10;
+            left = Math.random() * 70 + 10;
+        } while (isOverlapping(top, left));
+        node.style.top = `${top}%`;
+        node.style.left = `${left}%`;
+    }
+
+    function isOverlapping(top, left) {
+        const nodes = document.querySelectorAll('.node, .group');
+        for (const otherNode of nodes) {
+            const rect = otherNode.getBoundingClientRect();
+            const nodeTop = parseFloat(top);
+            const nodeLeft = parseFloat(left);
+            if (
+                Math.abs(nodeTop - rect.top) < 100 &&
+                Math.abs(nodeLeft - rect.left) < 100
+            ) {
+                return true; // Overlapping
+            }
+        }
+        return false;
     }
 
     function drawConnection(node1, node2) {
@@ -134,6 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const draggedElement = document.getElementById(draggedElementId);
 
             if (draggedElement && (target.classList.contains('node') || target.classList.contains('group'))) {
+                positionNode(draggedElement);
                 drawConnection(target, draggedElement);
             }
         });
