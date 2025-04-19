@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function () {
         textContainer.innerHTML = `<div>${name}</div><div>${job}</div>`;
         node.appendChild(textContainer);
 
-        // Add image or color
         if (imageInput.files.length > 0) {
             const image = document.createElement('img');
             image.src = URL.createObjectURL(imageInput.files[0]);
@@ -97,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function positionNode(node) {
-        // Ensure no overlap
         let top, left;
         do {
             top = Math.random() * 70 + 10;
@@ -117,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 Math.abs(nodeTop - rect.top) < 100 &&
                 Math.abs(nodeLeft - rect.left) < 100
             ) {
-                return true; // Overlapping
+                return true;
             }
         }
         return false;
@@ -141,6 +139,9 @@ document.addEventListener('DOMContentLoaded', function () {
         line.style.transform = `rotate(${angle}rad)`;
         line.style.top = `${y1}px`;
         line.style.left = `${x1}px`;
+
+        // Change line color to match NODE color
+        line.style.backgroundColor = getComputedStyle(node2).backgroundColor;
 
         networkContainer.appendChild(line);
     }

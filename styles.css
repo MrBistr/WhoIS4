@@ -26,6 +26,7 @@ header {
 header h1 {
     margin: 0;
     font-size: 2.5rem;
+    color: #fff;
 }
 
 header button {
@@ -33,10 +34,17 @@ header button {
     padding: 10px 15px;
     font-size: 1rem;
     border: none;
-    background-color: #6200ea;
+    background-color: rgba(255, 255, 255, 0.2);
     color: #fff;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+header button:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
 }
 
 main {
@@ -52,34 +60,36 @@ main {
     height: 80%;
     margin: auto;
     border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
 }
 
 .node, .group {
     position: absolute;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     color: #fff;
-    font-size: 0.9rem;
     text-align: center;
     cursor: pointer;
     border-radius: 50%;
-    transition: transform 0.3s;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease, top 0.3s ease, left 0.3s ease;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 .node {
     width: 100px;
     height: 100px;
     background-color: #6200ea;
-    flex-direction: column;
 }
 
 .group {
     width: 70px;
     height: 70px;
     background-color: #ff5722;
-    flex-direction: column;
 }
 
 .node .text,
@@ -156,7 +166,7 @@ form button#cancel-node-btn, form button#cancel-group-btn {
 
 .line {
     position: absolute;
-    width: 2px;
-    background-color: #fff;
+    width: 4px;
     transform-origin: top left;
+    transition: background-color 0.3s ease;
 }
