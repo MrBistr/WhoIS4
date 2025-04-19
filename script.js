@@ -70,11 +70,9 @@ document.addEventListener('DOMContentLoaded', function () {
         node.style.left = `${Math.random() * 70 + 10}%`;
         networkContainer.appendChild(node);
 
-        // Draw connection line to main node
         if (mainNode) {
             drawConnection(mainNode, node);
         } else {
-            // First node becomes the MAIN NODE
             mainNode = node;
             mainNode.classList.add('main-node');
             mainNode.style.top = '50%';
@@ -99,21 +97,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function drawConnection(node1, node2) {
-        // Remove existing line (if any)
-        const existingLine = document.querySelector(`.line[data-from="${node1.id}"][data-to="${node2.id}"]`);
-        if (existingLine) {
-            existingLine.remove();
-        }
-
-        // Create a new line
         const line = document.createElement('div');
         line.classList.add('line');
-        line.dataset.from = node1.id;
-        line.dataset.to = node2.id;
 
         const node1Rect = node1.getBoundingClientRect();
         const node2Rect = node2.getBoundingClientRect();
-
         const x1 = node1Rect.left + node1Rect.width / 2;
         const y1 = node1Rect.top + node1Rect.height / 2;
         const x2 = node2Rect.left + node2Rect.width / 2;
@@ -126,10 +114,6 @@ document.addEventListener('DOMContentLoaded', function () {
         line.style.transform = `rotate(${angle}rad)`;
         line.style.top = `${y1}px`;
         line.style.left = `${x1}px`;
-
-        // Add highlighting animation
-        line.classList.add('highlight');
-        setTimeout(() => line.classList.remove('highlight'), 2000);
 
         networkContainer.appendChild(line);
     }
@@ -150,14 +134,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const draggedElement = document.getElementById(draggedElementId);
 
             if (draggedElement && (target.classList.contains('node') || target.classList.contains('group'))) {
-                updateConnection(draggedElement, target);
+                drawConnection(target, draggedElement);
             }
         });
-    }
-
-    function updateConnection(draggedElement, targetNode) {
-        // Draw new connection to the target node
-        drawConnection(targetNode, draggedElement);
     }
 
     function randomColor() {
