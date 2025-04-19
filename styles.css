@@ -49,17 +49,16 @@ main {
 }
 
 #network-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    align-items: center;
+    position: relative;
+    width: 80%;
+    height: 80%;
+    margin: auto;
 }
 
 .node {
+    position: absolute;
     width: 100px;
     height: 100px;
-    background-color: #6200ea;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -69,10 +68,18 @@ main {
     text-align: center;
     cursor: pointer;
     transition: transform 0.3s;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .node:hover {
     transform: scale(1.1);
+}
+
+.main-node {
+    background-color: #6200ea;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 #node-form-container {
@@ -132,4 +139,11 @@ form button[type="submit"] {
 form button#cancel-btn {
     background-color: #b00020;
     color: #fff;
+}
+
+.line {
+    position: absolute;
+    width: 2px;
+    background-color: #fff;
+    transform-origin: top left;
 }

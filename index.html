@@ -14,7 +14,9 @@
         </header>
         <main>
             <div id="network-container">
-                <!-- Nodes will be dynamically added here -->
+                <div id="main-node" class="node main-node">
+                    Main Node
+                </div>
             </div>
         </main>
     </div>
@@ -28,8 +30,8 @@
             <label for="node-job">Job Title:</label>
             <input type="text" id="node-job" placeholder="Enter job title" required>
             
-            <label for="node-color">Node Color:</label>
-            <input type="color" id="node-color" value="#ff0000">
+            <label for="node-image">Upload Image:</label>
+            <input type="file" id="node-image" accept="image/*">
             
             <button type="submit">Add Node</button>
             <button type="button" id="cancel-btn">Cancel</button>
