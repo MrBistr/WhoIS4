@@ -1,34 +1,56 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const addNodeBtn = document.getElementById('add-node-btn');
+    const addGroupBtn = document.getElementById('add-group-btn');
     const nodeFormContainer = document.getElementById('node-form-container');
-    const cancelBtn = document.getElementById('cancel-btn');
+    const groupFormContainer = document.getElementById('group-form-container');
+    const cancelNodeBtn = document.getElementById('cancel-node-btn');
+    const cancelGroupBtn = document.getElementById('cancel-group-btn');
     const nodeForm = document.getElementById('node-form');
+    const groupForm = document.getElementById('group-form');
     const networkContainer = document.getElementById('network-container');
     let mainNode = null;
 
-    // Show form
+    // Show Node Form
     addNodeBtn.addEventListener('click', () => {
         nodeFormContainer.classList.remove('hidden');
     });
 
-    // Hide form
-    cancelBtn.addEventListener('click', () => {
+    // Show Group Form
+    addGroupBtn.addEventListener('click', () => {
+        groupFormContainer.classList.remove('hidden');
+    });
+
+    // Hide Node Form
+    cancelNodeBtn.addEventListener('click', () => {
         nodeFormContainer.classList.add('hidden');
     });
 
-    // Add node
+    // Hide Group Form
+    cancelGroupBtn.addEventListener('click', () => {
+        groupFormContainer.classList.add('hidden');
+    });
+
+    // Add Node
     nodeForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        createNode();
+        nodeFormContainer.classList.add('hidden'); // Close form after submit
+    });
 
+    // Add Group
+    groupForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        createGroup();
+        groupFormContainer.classList.add('hidden'); // Close form after submit
+    });
+
+    function createNode() {
         const name = document.getElementById('node-name').value;
         const job = document.getElementById('node-job').value;
         const imageInput = document.getElementById('node-image');
-        const newNode = document.createElement('div');
-        newNode.classList.add('node');
-
-        // Random color generator
-        const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-        newNode.style.border = `5px solid ${randomColor}`;
+        const node = document.createElement('div');
+        node.classList.add('node');
+        node.setAttribute('draggable', true);
 
         // Add image or text
         if (imageInput.files.length > 0) {
@@ -37,49 +59,108 @@ document.addEventListener('DOMContentLoaded', function() {
             image.style.width = '100%';
             image.style.height = '100%';
             image.style.borderRadius = '50%';
-            newNode.appendChild(image);
+            node.appendChild(image);
         } else {
-            newNode.textContent = `${name}\n${job}`;
-            newNode.style.backgroundColor = randomColor;
+            node.textContent = `${name}\n${job}`;
+            node.style.backgroundColor = randomColor();
         }
 
-        if (!mainNode) {
+        // Position node randomly
+        node.style.top = `${Math.random() * 70 + 10}%`;
+        node.style.left = `${Math.random() * 70 + 10}%`;
+        networkContainer.appendChild(node);
+
+        // Draw connection line to main node
+        if (mainNode) {
+            drawConnection(mainNode, node);
+        } else {
             // First node becomes the MAIN NODE
-            mainNode = newNode;
+            mainNode = node;
             mainNode.classList.add('main-node');
             mainNode.style.top = '50%';
             mainNode.style.left = '50%';
             mainNode.style.transform = 'translate(-50%, -50%)';
-            networkContainer.appendChild(mainNode);
-        } else {
-            // Position new node randomly
-            newNode.style.top = `${Math.random() * 80}%`;
-            newNode.style.left = `${Math.random() * 80}%`;
-            networkContainer.appendChild(newNode);
-
-            // Draw line connecting to main node
-            const line = document.createElement('div');
-            line.classList.add('line');
-            line.style.backgroundColor = randomColor;
-
-            const mainRect = mainNode.getBoundingClientRect();
-            const newNodeRect = newNode.getBoundingClientRect();
-            const x1 = mainRect.left + mainRect.width / 2;
-            const y1 = mainRect.top + mainRect.height / 2;
-            const x2 = newNodeRect.left + newNodeRect.width / 2;
-            const y2 = newNodeRect.top + newNodeRect.height / 2;
-
-            const length = Math.hypot(x2 - x1, y2 - y1);
-            line.style.width = `${length}px`;
-            line.style.top = `${y1}px`;
-            line.style.left = `${x1}px`;
-            line.style.transform = `rotate(${Math.atan2(y2 - y1, x2 - x1)}rad)`;
-
-            networkContainer.appendChild(line);
         }
 
-        // Clear form and hide it
-        nodeForm.reset();
-        nodeFormContainer.classList.add('hidden');
-    });
+        enableDragAndDrop(node);
+    }
+
+    function createGroup() {
+        const name = document.getElementById('group-name').value;
+        const group = document.createElement('div');
+        group.classList.add('group');
+        group.textContent = name;
+        group.style.top = `${Math.random() * 70 + 10}%`;
+        group.style.left = `${Math.random() * 70 + 10}%`;
+        group.setAttribute('draggable', true);
+        networkContainer.appendChild(group);
+
+        enableDragAndDrop(group);
+    }
+
+    function drawConnection(node1, node2) {
+        // Remove existing line (if any)
+        const existingLine = document.querySelector(`.line[data-from="${node1.id}"][data-to="${node2.id}"]`);
+        if (existingLine) {
+            existingLine.remove();
+        }
+
+        // Create a new line
+        const line = document.createElement('div');
+        line.classList.add('line');
+        line.dataset.from = node1.id;
+        line.dataset.to = node2.id;
+
+        const node1Rect = node1.getBoundingClientRect();
+        const node2Rect = node2.getBoundingClientRect();
+
+        const x1 = node1Rect.left + node1Rect.width / 2;
+        const y1 = node1Rect.top + node1Rect.height / 2;
+        const x2 = node2Rect.left + node2Rect.width / 2;
+        const y2 = node2Rect.top + node2Rect.height / 2;
+
+        const length = Math.hypot(x2 - x1, y2 - y1);
+        const angle = Math.atan2(y2 - y1, x2 - x1);
+
+        line.style.width = `${length}px`;
+        line.style.transform = `rotate(${angle}rad)`;
+        line.style.top = `${y1}px`;
+        line.style.left = `${x1}px`;
+
+        // Add highlighting animation
+        line.classList.add('highlight');
+        setTimeout(() => line.classList.remove('highlight'), 2000);
+
+        networkContainer.appendChild(line);
+    }
+
+    function enableDragAndDrop(element) {
+        element.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text', e.target.id);
+        });
+
+        element.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        element.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const target = e.target;
+            const draggedElementId = e.dataTransfer.getData('text');
+            const draggedElement = document.getElementById(draggedElementId);
+
+            if (draggedElement && (target.classList.contains('node') || target.classList.contains('group'))) {
+                updateConnection(draggedElement, target);
+            }
+        });
+    }
+
+    function updateConnection(draggedElement, targetNode) {
+        // Draw new connection to the target node
+        drawConnection(targetNode, draggedElement);
+    }
+
+    function randomColor() {
+        return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    }
 });

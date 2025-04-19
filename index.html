@@ -11,14 +11,16 @@
         <header>
             <h1>Team Network</h1>
             <button id="add-node-btn">Add Node</button>
+            <button id="add-group-btn">Add Group</button>
         </header>
         <main>
             <div id="network-container">
-                <!-- Main Node and other nodes will be dynamically added here -->
+                <!-- Main Node, Nodes, and Groups dynamically added here -->
             </div>
         </main>
     </div>
 
+    <!-- Node Form -->
     <div id="node-form-container" class="hidden">
         <form id="node-form">
             <h2>Add a Node</h2>
@@ -32,7 +34,19 @@
             <input type="file" id="node-image" accept="image/*">
             
             <button type="submit">Add Node</button>
-            <button type="button" id="cancel-btn">Cancel</button>
+            <button type="button" id="cancel-node-btn">Cancel</button>
+        </form>
+    </div>
+
+    <!-- Group Form -->
+    <div id="group-form-container" class="hidden">
+        <form id="group-form">
+            <h2>Add a Group</h2>
+            <label for="group-name">Group Name:</label>
+            <input type="text" id="group-name" placeholder="Enter group name" required>
+            
+            <button type="submit">Add Group</button>
+            <button type="button" id="cancel-group-btn">Cancel</button>
         </form>
     </div>
 

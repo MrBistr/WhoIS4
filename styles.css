@@ -29,9 +29,7 @@ header h1 {
 }
 
 header button {
-    position: absolute;
-    right: 20px;
-    top: 20px;
+    margin: 0 10px;
     padding: 10px 15px;
     font-size: 1rem;
     border: none;
@@ -53,13 +51,11 @@ main {
     width: 80%;
     height: 80%;
     margin: auto;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.node {
+.node, .group {
     position: absolute;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -67,23 +63,28 @@ main {
     font-size: 0.9rem;
     text-align: center;
     cursor: pointer;
+    border-radius: 50%;
     transition: transform 0.3s;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.node:hover {
+.node {
+    width: 100px;
+    height: 100px;
+    background-color: #6200ea;
+}
+
+.group {
+    width: 70px;
+    height: 70px;
+    background-color: #ff5722;
+}
+
+.node:hover, .group:hover {
     transform: scale(1.1);
 }
 
-.main-node {
-    background-color: #6200ea;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-}
-
-#node-form-container {
+#node-form-container, #group-form-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -95,7 +96,7 @@ main {
     align-items: center;
 }
 
-#node-form-container.hidden {
+#node-form-container.hidden, #group-form-container.hidden {
     display: none;
 }
 
@@ -137,7 +138,7 @@ form button[type="submit"] {
     color: #fff;
 }
 
-form button#cancel-btn {
+form button#cancel-node-btn, form button#cancel-group-btn {
     background-color: #b00020;
     color: #fff;
 }
