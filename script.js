@@ -47,6 +47,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // First node becomes the MAIN NODE
             mainNode = newNode;
             mainNode.classList.add('main-node');
+            mainNode.style.top = '50%';
+            mainNode.style.left = '50%';
+            mainNode.style.transform = 'translate(-50%, -50%)';
             networkContainer.appendChild(mainNode);
         } else {
             // Position new node randomly
