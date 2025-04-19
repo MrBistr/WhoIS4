@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Network Prototype</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="background">
+        <header>
+            <h1>Team Network</h1>
+            <button id="add-node-btn">Add Node</button>
+        </header>
+        <main>
+            <div id="network-container">
+                <!-- Nodes will be dynamically added here -->
+            </div>
+        </main>
+    </div>
+
+    <div id="node-form-container" class="hidden">
+        <form id="node-form">
+            <h2>Add a Node</h2>
+            <label for="node-name">Name:</label>
+            <input type="text" id="node-name" placeholder="Enter name" required>
+            
+            <label for="node-job">Job Title:</label>
+            <input type="text" id="node-job" placeholder="Enter job title" required>
+            
+            <label for="node-color">Node Color:</label>
+            <input type="color" id="node-color" value="#ff0000">
+            
+            <button type="submit">Add Node</button>
+            <button type="button" id="cancel-btn">Cancel</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
