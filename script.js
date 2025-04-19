@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const cancelBtn = document.getElementById('cancel-btn');
     const nodeForm = document.getElementById('node-form');
     const networkContainer = document.getElementById('network-container');
-    const mainNode = document.getElementById('main-node');
+    let mainNode = null;
 
     // Show form
     addNodeBtn.addEventListener('click', () => {
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nodeFormContainer.classList.add('hidden');
     });
 
-    // Add new node
+    // Add node
     nodeForm.addEventListener('submit', (e) => {
         e.preventDefault();
 
@@ -27,10 +27,10 @@ document.addEventListener('DOMContentLoaded', function() {
         newNode.classList.add('node');
 
         // Random color generator
-        const randomColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
-        newNode.style.backgroundColor = randomColor;
+        const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+        newNode.style.border = `5px solid ${randomColor}`;
 
-        // Add text and image
+        // Add image or text
         if (imageInput.files.length > 0) {
             const image = document.createElement('img');
             image.src = URL.createObjectURL(imageInput.files[0]);
@@ -40,32 +40,40 @@ document.addEventListener('DOMContentLoaded', function() {
             newNode.appendChild(image);
         } else {
             newNode.textContent = `${name}\n${job}`;
+            newNode.style.backgroundColor = randomColor;
         }
 
-        // Add node to the container
-        newNode.style.top = `${Math.random() * 80}%`;
-        newNode.style.left = `${Math.random() * 80}%`;
-        networkContainer.appendChild(newNode);
+        if (!mainNode) {
+            // First node becomes the MAIN NODE
+            mainNode = newNode;
+            mainNode.classList.add('main-node');
+            networkContainer.appendChild(mainNode);
+        } else {
+            // Position new node randomly
+            newNode.style.top = `${Math.random() * 80}%`;
+            newNode.style.left = `${Math.random() * 80}%`;
+            networkContainer.appendChild(newNode);
 
-        // Draw a line connecting to the main node
-        const line = document.createElement('div');
-        line.classList.add('line');
-        line.style.backgroundColor = randomColor;
+            // Draw line connecting to main node
+            const line = document.createElement('div');
+            line.classList.add('line');
+            line.style.backgroundColor = randomColor;
 
-        const mainRect = mainNode.getBoundingClientRect();
-        const newNodeRect = newNode.getBoundingClientRect();
-        const x1 = mainRect.left + mainRect.width / 2;
-        const y1 = mainRect.top + mainRect.height / 2;
-        const x2 = newNodeRect.left + newNodeRect.width / 2;
-        const y2 = newNodeRect.top + newNodeRect.height / 2;
+            const mainRect = mainNode.getBoundingClientRect();
+            const newNodeRect = newNode.getBoundingClientRect();
+            const x1 = mainRect.left + mainRect.width / 2;
+            const y1 = mainRect.top + mainRect.height / 2;
+            const x2 = newNodeRect.left + newNodeRect.width / 2;
+            const y2 = newNodeRect.top + newNodeRect.height / 2;
 
-        const length = Math.hypot(x2 - x1, y2 - y1);
-        line.style.width = `${length}px`;
-        line.style.top = `${y1}px`;
-        line.style.left = `${x1}px`;
-        line.style.transform = `rotate(${Math.atan2(y2 - y1, x2 - x1)}rad)`;
+            const length = Math.hypot(x2 - x1, y2 - y1);
+            line.style.width = `${length}px`;
+            line.style.top = `${y1}px`;
+            line.style.left = `${x1}px`;
+            line.style.transform = `rotate(${Math.atan2(y2 - y1, x2 - x1)}rad)`;
 
-        networkContainer.appendChild(line);
+            networkContainer.appendChild(line);
+        }
 
         // Clear form and hide it
         nodeForm.reset();
